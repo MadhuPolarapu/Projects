@@ -1,0 +1,9 @@
+import random
+num=random.randint(1,10)
+guess=int(input("I'm Thinking a Number in 1-10,Can You Guess It..?\n"))
+while True:
+    if guess==num:
+        break
+    else:
+        guess=int(input("Nope,Try Again:"))
+print("Yes I'm Thinking",num)
