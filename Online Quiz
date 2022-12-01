@@ -1,0 +1,53 @@
+import requests
+import json
+import pprint
+import random
+import html
+
+correct=0
+wrong=0
+url="https://opentdb.com/api.php?amount=10"
+end_game=""
+while end_game!="quit":
+    r=requests.get(url)
+    if(r.status_code!=200):
+        end_game=input("Sorry,there was a problem retrieving the question. press enter  to try again or type 'quit' to quit the game.").lower()
+    else:
+        valid_ans=False
+        ans_num=1
+        data=json.loads(r.text)
+        question=data['results'][0]['question']
+        answers=data['results'][0]['incorrect_answers']
+        correct_answer=data['results'][0]['correct_answer']
+        answers.append(correct_answer)
+        random.shuffle(answers)
+
+        print(html.unescape(question)+"\n")
+        for answer in answers:
+            print(str(ans_num)+"-"+html.unescape(answer))
+            ans_num+=1
+        while valid_ans==False:
+            u_ans=input("\n Type the number of Correct Answer")
+            try:
+                u_ans=int(u_ans)
+                if u_ans>len(answers) or u_ans<=0:
+                    print("Invalid Answer")
+                else:
+                    valid_ans=True
+            except:
+                print("Invalid answer,Use only numbers.")
+        u_ans=answers[int(u_ans)-1]
+
+        if u_ans==correct_answer:
+            print("Congratulations...! .You answered correctly...!!!")
+            correct+=1
+        else:
+            print("Incorrect...!!!.The correct answer is - "+html.unescape(correct_answer))
+            wrong+=1
+
+        print("\nYour Score:")
+        print("Correct answers:"+str(correct))
+        print("Incorrect answers:"+str(wrong))
+        print("\n*******************************************")
+        end_game=input("Press enter to play again or type 'quit' to quit the game.\n").lower()
+print("\n Thanks for Playing")
